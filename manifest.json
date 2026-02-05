@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "TubeGenie AI",
+  "version": "5",
+  "description": "Generate optimized YouTube titles, descriptions, and tags using BlogCutter AI API.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://blogcutter.com/*",
+    "https://studio.youtube.com/*",
+    "https://www.youtube.com/*",
+    "https://youtube.com/*"
+  ],
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://studio.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "YouTube Content Generator"
+  },
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "content_security_policy": {
+  "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; style-src 'self' 'unsafe-inline';"
+}
+}

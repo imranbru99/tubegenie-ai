@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogCutter Extension Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8 font-sans">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-indigo-700 mb-4">API Key Settings</h2>
+        <p class="text-sm text-gray-600 mb-4">Enter your BlogCutter API key to enable generation.</p>
+        <div class="flex flex-col gap-4">
+            <input 
+                type="password" 
+                id="api-key-input" 
+                placeholder="Enter BlogCutter API Key" 
+                class="p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+            >
+            <button 
+                id="save-api-key-btn" 
+                class="bg-indigo-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
+            >
+                Save API Key
+            </button>
+            <div id="status-message" class="text-sm hidden"></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-4">Key is stored securely in your browser only.</p>
+    </div>
+    <script src="options.js"></script>
+</body>
+</html>

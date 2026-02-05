@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeGenie AI</title>
+    <style>
+        :root {
+            --primary: #4f46e5;        /* indigo-600 */
+            --primary-dark: #4338ca;
+            --success: #10b981;        /* emerald-600 */
+            --success-dark: #059669;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-width: 380px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.875rem;
+            opacity: 0.92;
+        }
+
+        .settings-btn {
+            background: rgba(255,255,255,0.22);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .main-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .generate-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn-generate {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-generate:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-generate:disabled {
+            background: #a5b4fc;
+            cursor: not-allowed;
+        }
+
+        /* Loading animation */
+        .loading-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(79,70,229,0.3);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pulse-text {
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s;
+            border: none;
+        }
+
+        .btn-apply {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-apply:hover {
+            background: var(--success-dark);
+        }
+
+        .btn-copy {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-copy:hover {
+            background: #cbd5e1;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0 12px;
+        }
+
+        .section-title h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .btn-clear {
+            color: #ef4444;
+            background: none;
+            border: none;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .history-item {
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .history-item p {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .history-item small {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <h1>YouTube Content AI</h1>
+                <p>Smart titles, descriptions & tags — instantly</p>
+            </div>
+            <button id="open-options" class="settings-btn">Settings</button>
+        </div>
+    </div>
+
+    <div class="main-card">
+        <div class="generate-area">
+            <button id="generate-all" class="btn-generate">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 5a2 2 0 012-2h8a2 2 0 012 2v2h-2V5H4v10h6v2H4a2 2 0 01-2-2V5z"/>
+                </svg>
+                Generate All
+            </button>
+
+            <div id="status" class="loading-container hidden">
+                <div class="spinner"></div>
+                <span class="pulse-text">Generating...</span>
+            </div>
+        </div>
+
+        <div id="results" class="hidden">
+            <div>
+                <label class="label">Title</label>
+                <div style="display: flex; gap: 10px;">
+                    <input id="gen-title" class="input-field" readonly>
+                    <button id="apply-title" class="btn-action btn-apply">Apply</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label class="label">Description</label>
+                <textarea id="gen-desc" class="input-field" rows="5" readonly style="resize: vertical;"></textarea>
+                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                    <button id="apply-desc" class="btn-action btn-apply">Apply Description</button>
+                    <button id="copy-desc" class="btn-action btn-copy">Copy</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label class="label">Tags</label>
+                <div style="display: flex; gap: 10px;">
+                    <input id="gen-tags" class="input-field" readonly>
+                    <button id="copy-tags" class="btn-action btn-copy">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <h3>History</h3>
+            <button id="clear-history" class="btn-clear">Clear</button>
+        </div>
+
+        <div id="history-list"></div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
